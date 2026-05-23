@@ -11,9 +11,6 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- ========================================== -->
-    <!--          СЕКЦИЯ 1: СТИЛИ (CSS)             -->
-    <!-- ========================================== -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -21,7 +18,7 @@
             color: #f3f4f6;
         }
 
-        /* Настройка кастомного скроллбара */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -48,61 +45,29 @@
             box-shadow: 0 0 20px rgba(239, 68, 68, 0.25);
         }
 
-        .glow-amber {
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
-        }
-
-        /* Анимация пульсации для важных предупреждений и кнопок */
+        /* Pulsing animation for NO BAIL and Timers */
         @keyframes pulse-border {
-            0% {
-                border-color: rgba(239, 68, 68, 0.4);
-            }
-            50% {
-                border-color: rgba(239, 68, 68, 1);
-                box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
-            }
-            100% {
-                border-color: rgba(239, 68, 68, 0.4);
-            }
+            0% { border-color: rgba(239, 68, 68, 0.4); }
+            50% { border-color: rgba(239, 68, 68, 1); box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+            100% { border-color: rgba(239, 68, 68, 0.4); }
         }
 
         @keyframes pulse-amber {
-            0% {
-                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
-            }
-            70% {
-                box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
-            }
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
         }
 
-        .animate-pulse-border {
-            animation: pulse-border 1.5s infinite;
-        }
+        .animate-pulse-border { animation: pulse-border 1.5s infinite; }
+        .animate-pulse-amber { animation: pulse-amber 2s infinite; }
 
-        .animate-pulse-amber {
-            animation: pulse-amber 2s infinite;
-        }
-
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col overflow-x-hidden selection:bg-blue-600 selection:text-white">
 
-    <!-- ========================================== -->
-    <!--          СЕКЦИЯ 2: РАЗМЕТКА (HTML)         -->
-    <!-- ========================================== -->
-
-    <!-- Header Terminal HUD -->
+    <!-- Header HUD -->
     <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-40 px-6 py-3.5">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             <!-- Brand -->
@@ -117,21 +82,21 @@
                     </h1>
                     <p class="text-[10px] md:text-xs text-slate-400 font-mono flex items-center gap-1.5">
                         <span class="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-ping"></span>
-                        Интерактивный терминал обработки нарушений и регламентов
+                        Рабочая панель агента Секретной Службы
                     </p>
                 </div>
             </div>
 
             <!-- Header Controls -->
             <div class="flex items-center gap-3 flex-wrap text-sm font-mono">
-                <!-- Tactical Handbook Trigger Button -->
+                <!-- Handbook Trigger Button -->
                 <button onclick="openHandbook()" class="bg-amber-500 hover:bg-amber-600 border border-amber-600/80 text-slate-950 px-3.5 py-2 rounded-lg font-bold transition duration-200 flex items-center gap-2 text-xs shadow-md animate-pulse-amber">
-                    <i class="fa-solid fa-book-open"></i> 🚨 СПРАВОЧНИК(ВАЖНО!)
+                    <i class="fa-solid fa-book-open"></i> СПРАВОЧНИК ПО ЗАДЕРЖАНИЮ
                 </button>
                 <!-- Clock -->
                 <div class="bg-slate-950 px-3.5 py-2 rounded border border-slate-800 flex items-center gap-2 text-slate-300 text-xs">
                     <i class="fa-regular fa-clock text-blue-400"></i>
-                    <span id="tacticalClock">12:00:00</span>
+                    <span id="realClock">12:00:00</span>
                 </div>
                 <!-- Reset Board -->
                 <button onclick="clearAllSelected()" class="bg-red-950/40 hover:bg-red-900/60 border border-red-800/60 text-red-300 px-3 py-2 rounded-lg transition duration-200 flex items-center gap-2 text-xs font-semibold group">
@@ -199,34 +164,64 @@
         </section>
 
         <!-- Right Column: Interactive Protocol & USSS Instructions (Cols 6-12) -->
-        <section class="lg:col-span-7 flex flex-col gap-5">
+        <section class="lg:col-span-7 flex flex-col gap-4">
+
+            <!-- Procedural Timer -->
+            <div class="bg-slate-900 rounded-xl border border-slate-850 p-4 shadow-sm relative overflow-hidden">
+                <div class="flex justify-between items-center mb-3">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-stopwatch text-emerald-400"></i>
+                        <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider font-mono">Процессуальный Таймер</h3>
+                    </div>
+                    <span id="mainTimerDisplay" class="text-3xl font-mono text-emerald-400 font-bold tracking-tight">60:00</span>
+                </div>
+                
+                <div class="flex flex-wrap gap-2 items-center">
+                    <button id="btnMainTimer" onclick="toggleMainTimer()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-xs font-bold transition min-w-[100px]">
+                        СТАРТ
+                    </button>
+                    <button onclick="resetTimers()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-lg text-xs font-bold transition">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                    
+                    <div class="h-6 w-px bg-slate-700 mx-1"></div>
+                    
+                    <button onclick="startWaitTimer(10, 'Адвокат')" class="bg-amber-600/20 hover:bg-amber-600/40 border border-amber-600/50 text-amber-400 px-3 py-2 rounded-lg text-[11px] font-bold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-scale-balanced"></i> Адвокат (10м)
+                    </button>
+                    <button onclick="startWaitTimer(15, 'Прокурор')" class="bg-rose-600/20 hover:bg-rose-600/40 border border-rose-600/50 text-rose-400 px-3 py-2 rounded-lg text-[11px] font-bold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-shield"></i> Прокурор (15м)
+                    </button>
+                </div>
+
+                <!-- Sub-timer for waiting (hidden by default) -->
+                <div id="waitTimerContainer" class="hidden mt-3 p-2.5 bg-slate-950 border-l-4 border-amber-500 rounded flex justify-between items-center">
+                    <div class="flex flex-col">
+                        <span class="text-[9px] text-slate-500 font-mono uppercase">Заморозка времени</span>
+                        <span id="waitTimerLabel" class="text-xs font-bold text-slate-200">Ожидание ответа</span>
+                    </div>
+                    <span id="waitTimerDisplay" class="text-xl font-mono text-amber-400 font-bold animate-pulse">10:00</span>
+                </div>
+            </div>
 
             <!-- Active Protocol board / Calculator -->
             <div id="calculatorCard" class="bg-slate-900 rounded-xl border border-slate-850 flex flex-col overflow-hidden glow-blue transition-all duration-300">
-                <!-- Banner Title -->
                 <div class="px-4 py-3 bg-gradient-to-r from-blue-950/40 via-slate-900 to-slate-900 border-b border-slate-850 flex justify-between items-center">
                     <div class="flex items-center gap-2">
                         <i class="fa-solid fa-list-check text-blue-400"></i>
                         <h2 class="font-bold text-sm uppercase tracking-wider text-slate-200">АКТИВНОЕ ДОСЬЕ И РАСЧЕТЫ</h2>
                     </div>
-                    <span class="text-[10px] px-2 py-0.5 bg-blue-500/10 border border-blue-500/30 text-blue-300 font-mono rounded">АВТОМАТИКА</span>
                 </div>
 
-                <!-- Active Charge Card Container -->
-                <div class="p-4 flex-grow min-h-[140px] max-h-[220px] overflow-y-auto bg-slate-900/50">
-                    <!-- Empty State -->
+                <div class="p-4 flex-grow min-h-[120px] max-h-[200px] overflow-y-auto bg-slate-900/50">
                     <div id="emptyChargesState" class="h-full flex flex-col items-center justify-center text-center py-4 text-slate-500">
                         <i class="fa-solid fa-gavel text-3xl mb-2 text-slate-700"></i>
                         <p class="text-sm font-semibold">Досье пусто</p>
                         <p class="text-[11px] text-slate-600 mt-1 max-w-sm">Добавьте статьи УК, АК, ДК или ЭК из левой панели двойным кликом.</p>
                     </div>
-
-                    <div id="selectedChargesList" class="space-y-2.5 hidden">
-                        <!-- Items rendered here -->
-                    </div>
+                    <div id="selectedChargesList" class="space-y-2.5 hidden"></div>
                 </div>
 
-                <!-- Tactical Calculations -->
                 <div class="bg-slate-950 p-4 border-t border-slate-850 grid grid-cols-2 md:grid-cols-4 gap-3 font-mono">
                     <!-- Stars -->
                     <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 flex flex-col justify-between">
@@ -257,31 +252,46 @@
                         <span class="text-[9px] text-slate-400 mt-1 truncate">Время в КПЗ / Тюрьме</span>
                     </div>
 
-                    <!-- Bail Amount (Залог) -->
+                    <!-- Bail Amount -->
                     <div id="bailContainer" class="bg-slate-900/80 p-3 rounded-lg border border-slate-800 flex flex-col justify-between transition-colors duration-300">
                         <span class="text-[9px] text-slate-500 font-bold uppercase">Возможность залога</span>
                         <span id="bailAmountText" class="text-base font-extrabold text-blue-400 mt-1">$0</span>
                         <span id="bailLabel" class="text-[9px] text-slate-400 mt-1 truncate">Доступен выход под залог</span>
                     </div>
                 </div>
-
-                <!-- Auto-Generated Warnings (No Bail, Dismissal, etc.) -->
-                <div id="specialDirectivesContainer" class="hidden px-4 py-3 bg-red-950/30 border-t border-red-900/40 text-xs text-red-300 flex flex-col gap-1.5">
-                    <!-- Dynamic -->
-                </div>
+                
+                <div id="specialDirectivesContainer" class="hidden px-4 py-3 bg-red-950/30 border-t border-red-900/40 text-xs text-red-300 flex flex-col gap-1.5"></div>
             </div>
 
-            <!-- Tactical Notepad (Operational Buffer) -->
-            <div class="bg-slate-900 rounded-xl border border-slate-850 p-3 flex flex-col gap-2 relative">
-                <div class="flex items-center justify-between">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- BOLO Tracker -->
+                <div class="bg-slate-900 rounded-xl border border-slate-850 p-3 flex flex-col gap-2">
                     <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-mono flex items-center gap-2">
-                        <i class="fa-solid fa-pen-to-square text-blue-400"></i> Блокнот
+                        <i class="fa-solid fa-car-side text-amber-400"></i> Ориентировки (BOLO)
                     </h3>
-                    <button onclick="clearNotepad()" class="text-[10px] text-slate-500 hover:text-rose-400 transition" title="Очистить блокнот">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
+                    <div class="flex gap-2">
+                        <input type="text" id="boloInput" placeholder="Номер авто, ID, приметы..." class="w-full bg-slate-950 text-slate-300 text-xs p-2 border border-slate-800 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 outline-none font-mono" onkeypress="handleBoloKeyPress(event)">
+                        <button onclick="addBolo()" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-2 rounded text-xs transition">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                    <div id="boloList" class="space-y-1.5 mt-1 max-h-24 overflow-y-auto pr-1">
+                        <!-- BOLO items -->
+                    </div>
                 </div>
-                <textarea id="tacticalNotepad" class="w-full h-16 bg-slate-950 text-slate-300 text-xs p-2.5 border border-slate-800 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 outline-none resize-y font-mono" placeholder="Заметки агента: номера машин, статики [ID] подозреваемых, приметы (сохраняется автоматически)..." oninput="saveNotepad()"></textarea>
+
+                <!-- Notepad -->
+                <div class="bg-slate-900 rounded-xl border border-slate-850 p-3 flex flex-col gap-2 relative">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-mono flex items-center gap-2">
+                            <i class="fa-solid fa-pen-to-square text-blue-400"></i> Блокнот
+                        </h3>
+                        <button onclick="clearNotepad()" class="text-[10px] text-slate-500 hover:text-rose-400 transition" title="Очистить блокнот">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                    <textarea id="tacticalNotepad" class="w-full h-full min-h-[4rem] bg-slate-950 text-slate-300 text-xs p-2.5 border border-slate-800 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 outline-none resize-none font-mono" placeholder="Свободные записи..." oninput="saveNotepad()"></textarea>
+                </div>
             </div>
 
             <!-- Interactive USSS Manual and Procedures -->
@@ -303,75 +313,127 @@
                 </div>
 
                 <!-- Tab 1: USSS Regulations & Jurisdiction -->
-                <div id="regContentRules" class="text-xs space-y-3 h-52 overflow-y-auto pr-1">
+                <div id="regContentRules" class="text-xs space-y-3 h-64 overflow-y-auto pr-1">
                     <div class="space-y-3 font-sans text-slate-300">
                         <div class="bg-slate-950 p-3.5 rounded-lg border border-slate-800">
-                            <h4 class="font-bold text-amber-400 mb-1.5 uppercase font-mono"><i class="fa-solid fa-passport"></i> 1. Основная юрисдикция и задачи (ФЗ о USSS)</h4>
-                            <p class="leading-relaxed">
-                                USSS имеет <strong>Федеральную юрисдикцию</strong> по всей территории штата Сан-Андреас. Основные задачи: охрана Губернатора, Вице-Губернатора, министров, судей, территории Капитолия, залов суда и национальной финансовой системы. Также пресечение оборота нелегального оружия, наркотиков и спецсредств.
+                            <h4 class="font-bold text-amber-400 mb-2 uppercase font-mono flex items-center gap-1.5"><i class="fa-solid fa-passport"></i> 1. ЮРИСДИКЦИЯ И ОСНОВНЫЕ ЗАДАЧИ (ФЗ о ССС)</h4>
+                            <p class="leading-relaxed text-slate-300 mb-2.5">
+                                Региональное отделение Секретной Службы (USSS) является правоохранительным органом с федеральной юрисдикцией, действующим на всей территории штата Сан-Андреас. Деятельность службы разделена на две ключевые миссии:
                             </p>
+                            <ul class="space-y-2 text-slate-300 pl-1 list-disc list-inside">
+                                <li class="leading-relaxed">
+                                    <strong class="text-amber-300">Защитная миссия:</strong> Обеспечение безопасности объектов государственной охраны (Губернатор, Вице-Губернатор, министры, судьи и иные лица по приказу). Под охраной USSS также находятся здания и сооружения Правительства (Капитолий) и залы судов.
+                                </li>
+                                <li class="leading-relaxed">
+                                    <strong class="text-amber-300">Охранно-следственная миссия:</strong> Расследование нападений на охраняемых лиц, защита государственной тайны, борьба с должностными преступлениями и коррупцией. USSS обладает исключительными полномочиями по охране национальной финансовой системы, включая борьбу с фальшивомонетничеством, финансовыми махинациями и уклонением от налогов.
+                                </li>
+                                <li class="leading-relaxed">
+                                    <strong class="text-amber-300">Контроль оборота:</strong> Пресечение незаконного оборота оружия, наркотических средств, нелегального алкоголя и табака.
+                                </li>
+                                <li class="leading-relaxed">
+                                    <strong class="text-amber-300">Универсальный доступ:</strong> Секретная Служба обладает уникальным правом доступа к компетенции любого ведомства штата для проведения следственных действий в интересах государства.
+                                </li>
+                            </ul>
                         </div>
+
                         <div class="bg-slate-950 p-3.5 rounded-lg border border-slate-800">
-                            <h4 class="font-bold text-blue-400 mb-1.5 uppercase font-mono"><i class="fa-solid fa-arrow-rotate-right"></i> 2. Алгоритм задержания (Процессуальный кодекс)</h4>
-                            <ol class="list-decimal list-inside space-y-1.5 pl-1 leading-relaxed">
-                                <li>Надеть наручники (при угрозе бегства/сопротивления).</li>
-                                <li>Представиться, предъявить опознавательный знак (жетон/удостоверение).</li>
-                                <li>Озвучить причину задержания и конкретные статьи.</li>
-                                <li><strong>Зачитать правило Миранды</strong> (обязательно ДО проведения допроса и обыска).</li>
-                                <li>Провести первичный обыск (при необходимости).</li>
-                                <li>Доставить задержанного в КПЗ.</li>
-                                <li>Предоставить права (адвокат - ожидание 10 минут, 1 телефонный звонок).</li>
-                                <li>Провести вторичный обыск, заполнить DataBase в течение 20 минут.</li>
+                            <h4 class="font-bold text-blue-400 mb-2 uppercase font-mono flex items-center gap-1.5"><i class="fa-solid fa-arrow-rotate-right"></i> 2. РЕГЛАМЕНТ ЗАДЕРЖАНИЯ (Процессуальный кодекс, ст. 17)</h4>
+                            <p class="leading-relaxed text-slate-300 mb-2.5">
+                                Любое ограничение свободы гражданина должно проводиться строго в установленной законом последовательности:
+                            </p>
+                            <ol class="space-y-2.5 pl-4 list-decimal text-slate-300">
+                                <li class="leading-relaxed"><strong class="text-blue-300">Применение спецсредств:</strong> Надеть наручники на подозреваемого. Помните о соблюдении стадий применения силы (ст. 37 ПК).</li>
+                                <li class="leading-relaxed"><strong class="text-blue-300">Идентификация агента:</strong> Сразу после ограничения свободы вы обязаны представиться и предъявить идентификационный знак: служебное удостоверение, жетон, бейдж или нашивку.</li>
+                                <li class="leading-relaxed"><strong class="text-blue-300">Первичный обыск (по желанию):</strong> Проводится на месте с целью изъятия предметов, представляющих немедленную опасность (оружие, ножи, взрывчатка, наркотики).</li>
+                                <li class="leading-relaxed"><strong class="text-blue-300">Разъяснение прав (Миранда):</strong> Зачитать правило Миранды. По закону оно зачитывается один раз; повторно — только если задержанный не понял свои права (но не более двух раз в сумме).</li>
+                                <li class="leading-relaxed"><strong class="text-blue-300">Озвучивание причин:</strong> Разъяснить основания задержания и конкретные статьи кодексов, которые инкриминируются лицу.</li>
+                                <li class="leading-relaxed"><strong class="text-blue-300">Идентификация задержанного:</strong> Проверить документы и наличие лица в базе федерального/боло-розыска.</li>
+                                <li class="leading-relaxed"><strong class="text-blue-300">Реализация прав:</strong>
+                                    <ul class="list-disc list-inside pl-3 mt-1 space-y-1 text-slate-400">
+                                        <li><strong class="text-slate-300">Адвокат:</strong> При требовании вызвать государственного адвоката через рацию департамента. Ожидание ответа/приезда адвоката — 10 минут (на это время процессуальный час замораживается).</li>
+                                        <li><strong class="text-slate-300">Телефонный звонок:</strong> Предоставить один звонок длительностью до 3 минут исключительно для связи с частным адвокатом.</li>
+                                    </ul>
+                                </li>
+                                <li class="leading-relaxed"><strong class="text-blue-300">Доставка и передача:</strong> Доставить лицо в полицейский участок, департамент шерифа или офис FIB. Согласно ПГО, USSS запрещено самостоятельно проводить функциональный арест (сажать в КПЗ через меню), поэтому задержанный должен быть передан сотрудникам LSPD/LSCSD/FIB.
+                                    <div class="mt-1 pl-3 border-l-2 border-amber-500/50 text-[11px] text-amber-300"><strong>Исключение:</strong> Вы можете произвести арест самостоятельно только на основании ордера или судебного иска.</div>
+                                </li>
+                                <li class="leading-relaxed"><strong class="text-blue-300">Окончание процедуры:</strong> Провести вторичный обыск (изымается всё нелегальное и любое оружие/спецсредства). Заполнить отчетность о задержании/аресте (DataBase) необходимо в течение 1 часа после совершения действий (согласно внутреннему уставу).</li>
                             </ol>
+                            <div class="mt-3.5 p-3 bg-red-950/20 border border-red-900/30 rounded-lg text-xs text-red-300 leading-relaxed">
+                                <strong class="text-red-400 block mb-1 uppercase font-mono"><i class="fa-solid fa-triangle-exclamation"></i> Важно:</strong>
+                                Вы обязаны вести непрерывную видеозапись с момента пресечения нарушения до конца всех действий и хранить её 72 часа (по ПК) или 48 часов (по ПГО).
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Tab 2: DOs & DONTs (Strict guidelines) -->
-                <div id="regContentDoDont" class="hidden text-xs space-y-3 h-52 overflow-y-auto pr-1">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Tab 2: DOs & DONTs -->
+                <div id="regContentDoDont" class="hidden text-xs space-y-3 h-64 overflow-y-auto pr-1">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div class="bg-emerald-950/20 border border-emerald-900/40 rounded-lg p-3.5 space-y-2.5">
                             <h4 class="text-emerald-400 font-bold uppercase tracking-wider font-mono flex items-center gap-1.5 text-xs">
-                                <i class="fa-solid fa-circle-check"></i> ЧТО РАЗРЕШЕНО:
+                                <i class="fa-solid fa-circle-check"></i> ЧТО РАЗРЕШЕНО (ПРАВА):
                             </h4>
                             <ul class="list-disc list-inside space-y-1.5 text-slate-300 pl-1 leading-relaxed">
-                                <li>Проверять документы и досматривать лиц на территории Правительства (Капитолий) при подозрении на угрозу безопасности.</li>
-                                <li>Задерживать на месте лиц за ст. 12.7 ч.2 УК (проникновение без пропуска).</li>
-                                <li>Задерживать гос. служащего при совершении им тяжкого преступления (с вызовом прокурора!).</li>
-                                <li>Штрафовать по Этическому Кодексу (ст. 28 ЭК) при нарушениях этики.</li>
+                                <li><strong class="text-emerald-300">Административный контроль в Капитолии:</strong> Осуществлять личный досмотр и проверку документов у любых посетителей зданий Правительства и залов суда (за исключением неприкосновенных).</li>
+                                <li><strong class="text-emerald-300">Установление дистанции:</strong> Требовать от граждан и госслужащих соблюдения дистанции в 20 метров от охраняемого лица. В случае неповиновения разрешено применять огнестрельное оружие после предупреждения.</li>
+                                <li><strong class="text-emerald-300">Ограничение доступа:</strong> Самостоятельно определять перечень лиц, которым ограничен доступ на охраняемые объекты.</li>
+                                <li><strong class="text-emerald-300">Пресечение проникновений:</strong> Незамедлительно задерживать лиц по ст. 12.7 ч. 1 или ч. 2 УК.</li>
+                                <li><strong class="text-emerald-300">Работа с транспортом:</strong> Проводить обыск автотранспорта при подозрении на угрозу безопасности.</li>
+                                <li><strong class="text-emerald-300">Борьба с фин. преступлениями:</strong> Проводить расследования, изымать ресурсы, контрафакт и нелегальное оружие.</li>
+                                <li><strong class="text-emerald-300">Универсальная компетенция:</strong> Исключительное право доступа к компетенции любого ведомства штата.</li>
+                                <li><strong class="text-emerald-300">Применение силы к госслужащим:</strong> Открывать огонь на поражение без предупреждения по любому сотруднику госструктур, если он создает прямую угрозу жизни охраняемого лица.</li>
+                                <li><strong class="text-emerald-300">Наложение штрафов:</strong> Привлекать к ответственности (АК и ЭК) на территории Мэрии.</li>
                             </ul>
                         </div>
                         <div class="bg-rose-950/20 border border-rose-900/40 rounded-lg p-3.5 space-y-2.5">
                             <h4 class="text-rose-400 font-bold uppercase tracking-wider font-mono flex items-center gap-1.5 text-xs">
-                                <i class="fa-solid fa-circle-xmark"></i> КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО:
+                                <i class="fa-solid fa-circle-xmark"></i> ЧТО ЗАПРЕЩЕНО (ОГРАНИЧЕНИЯ):
                             </h4>
                             <ul class="list-disc list-inside space-y-1.5 text-slate-300 pl-1 leading-relaxed">
-                                <li><strong class="text-rose-300">ПГО 1.14:</strong> Сажать гос. служащих в КПЗ без вердикта Прокурора (Исключение: ордер/суд).</li>
-                                <li><strong class="text-rose-300">ПГО 1.24:</strong> Умышленно затягивать процесс задержания (катать по штату, мариновать).</li>
-                                <li>Проводить обыск без законных оснований (ПК Статья 3).</li>
-                                <li>Оскорблять задержанных или использовать спецсредства из личной мести.</li>
+                                <li><strong class="text-rose-300">Функциональный арест (КПЗ):</strong> Категорически запрещено самостоятельно сажать игроков в КПЗ. Задержанный должен быть передан LSPD, LSCSD или FIB. (Исключение: ордер/суд).</li>
+                                <li><strong class="text-rose-300">Патрулирование штата:</strong> Запрещено свободное патрулирование вне Мэрии. (Исключения: кортежи, ордера, ЧП/ВП, теракты).</li>
+                                <li><strong class="text-rose-300">Арест госслужащих без прокурора:</strong> Запрещено помещать в КПЗ без одобрения прокурора (п. 1.14 ПГО).</li>
+                                <li><strong class="text-rose-300">Злоупотребление масками:</strong> Запрещено задерживать исключительно за маску. Сначала требование снять; задержание только при отказе.</li>
+                                <li><strong class="text-rose-300">Нарушение сроков:</strong> Запрещено намеренно затягивать процесс («мариновать») (п. 1.24 ПГО).</li>
+                                <li><strong class="text-rose-300">Нецелевое использование спецсредств:</strong> Запрещено использовать наручники/тайзер из мести или для развлечения.</li>
+                                <li><strong class="text-rose-300">Обыск без оснований:</strong> Запрещен личный обыск или обыск имущества без законных оснований (подозрение, ордер).</li>
+                                <li><strong class="text-rose-300">Нарушение этики:</strong> Запрещено первым оскорблять или провоцировать граждан.</li>
+                                <li><strong class="text-rose-300">Вмешательство:</strong> Запрещено вмешиваться в работу других отделов Правительства.</li>
                             </ul>
                         </div>
+                    </div>
+                    
+                    <div class="bg-indigo-950/30 border border-indigo-900/50 rounded-lg p-3.5 space-y-2">
+                        <h4 class="text-indigo-400 font-bold uppercase tracking-wider font-mono flex items-center gap-1.5 text-xs">
+                            <i class="fa-solid fa-star"></i> ЗОЛОТЫЕ ПРАВИЛА ПРОЦЕДУРЫ
+                        </h4>
+                        <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 text-slate-300 pl-1">
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-video text-indigo-500 mt-0.5 text-[10px]"></i> <span><strong>Видеофиксация:</strong> Вести непрерывную запись с момента пресечения нарушения. Хранить 48 часов (ПГО) / 72 часа (ПК).</span></li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-id-card text-indigo-500 mt-0.5 text-[10px]"></i> <span><strong>Идентификация:</strong> При первом обращении предъявить жетон, бейдж или удостоверение.</span></li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-bullhorn text-indigo-500 mt-0.5 text-[10px]"></i> <span><strong>Миранда:</strong> Зачитывается один раз. Если не понял — повторно (макс. 2 раза).</span></li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-phone text-indigo-500 mt-0.5 text-[10px]"></i> <span><strong>Права:</strong> Право на один звонок (до 3 минут только адвокату) и на гос. адвоката.</span></li>
+                        </ul>
                     </div>
                 </div>
 
                 <!-- Tab 3: Miranda text helper -->
-                <div id="regContentMiranda" class="hidden text-sm space-y-4 h-52">
-                    <div class="bg-gradient-to-br from-slate-950 to-slate-900 p-4 rounded-lg border border-slate-800 text-xs leading-relaxed h-full flex flex-col justify-center">
-                        <p class="font-semibold text-amber-400 mb-2 uppercase tracking-wide font-mono flex items-center gap-2">
-                            <i class="fa-solid fa-bullhorn text-amber-500"></i> Правило Миранды (Зачитывать ДО допроса/обыска):
+                <div id="regContentMiranda" class="hidden text-sm space-y-4 h-64">
+                    <div class="bg-gradient-to-br from-slate-950 to-slate-900 p-4 rounded-lg border border-slate-800 text-xs leading-relaxed h-full flex flex-col justify-center items-center">
+                        <p class="font-semibold text-amber-400 mb-4 uppercase tracking-wide font-mono flex items-center gap-2 text-base">
+                            <i class="fa-solid fa-bullhorn text-amber-500"></i> Правило Миранды
                         </p>
-                        <blockquote class="italic text-slate-200 bg-slate-950/80 p-4 rounded border-l-4 border-amber-500 leading-relaxed mb-4 text-sm shadow-inner">
+                        <blockquote class="italic text-slate-200 bg-slate-950/80 p-5 rounded-lg border-l-4 border-amber-500 leading-relaxed mb-6 text-base shadow-inner max-w-2xl text-center">
                             «Вы имеете право хранить молчание. Всё, что вы скажете, может и будет использовано против вас в суде. Ваш адвокат может присутствовать при допросе. Если вы не можете оплатить услуги адвоката, он будет предоставлен вам штатом. Вы понимаете свои права?»
                         </blockquote>
-                        <button id="mirandaCopyBtn" onclick="copyRawText('Вы имеете право хранить молчание. Всё, что вы скажете, может и будет использовано против вас в суде. Ваш адвокат может присутствовать при допросе. Если вы не можете оплатить услуги адвоката, он будет предоставлен вам штатом. Вы понимаете свои права?', 'mirandaCopyBtn')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-3 rounded-lg text-xs transition duration-200 flex items-center justify-center gap-2 shadow-lg w-fit">
-                            <i class="fa-regular fa-copy"></i> <span>СКОПИРОВАТЬ ТЕКСТ МИРАНДЫ В БУФЕР</span>
+                        <button onclick="copyRawText('Вы имеете право хранить молчание. Всё, что вы скажете, может и будет использовано против вас в суде. Ваш адвокат может присутствовать при допросе. Если вы не можете оплатить услуги адвоката, он будет предоставлен вам штатом. Вы понимаете свои права?', 'mirandaCopyBtn')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-3 rounded-lg text-sm transition duration-200 flex items-center justify-center gap-2 shadow-lg w-fit">
+                            <i class="fa-regular fa-copy"></i> <span id="mirandaCopyBtn">СКОПИРОВАТЬ ТЕКСТ В БУФЕР</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Tab 4: Secrecy Levels -->
-                <div id="regContentSecrecy" class="hidden text-xs space-y-3 h-52 overflow-y-auto pr-1">
+                <div id="regContentSecrecy" class="hidden text-xs space-y-3 h-64 overflow-y-auto pr-1">
                     <div class="space-y-2 font-sans text-slate-300">
                         <p class="text-slate-400 italic mb-2">Согласно Закону “О государственной тайне в Штате San Andreas” (ФЗ ГТ), каждый агент обязан соблюдать уровни доступа к информации:</p>
                         
@@ -424,7 +486,7 @@
     </main>
 
     <!-- ========================================================= -->
-    <!--     СЕКЦИЯ 2.5: ТАКТИЧЕСКИЙ МОДАЛЬНЫЙ СПРАВОЧНИК ПК/ПГО  -->
+    <!--     СЕКЦИЯ: МОДАЛЬНЫЙ СПРАВОЧНИК ПО ЗАДЕРЖАНИЮ            -->
     <!-- ========================================================= -->
     <div id="handbookModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-5xl h-[85vh] flex flex-col overflow-hidden glow-amber transition-transform duration-300 scale-95">
@@ -435,7 +497,7 @@
                         <i class="fa-solid fa-gavel"></i>
                     </div>
                     <div>
-                        <h2 class="font-extrabold text-base text-slate-100 tracking-wider uppercase">РУКОВОДСТВО USSS</h2>
+                        <h2 class="font-extrabold text-base text-slate-100 tracking-wider uppercase">ТАКТИЧЕСКОЕ РУКОВОДСТВО USSS</h2>
                         <p class="text-[10px] text-slate-400 font-mono">Справочник по Процессуальному Кодексу (ПК) и Правилам Государственных Организаций (ПГО)</p>
                     </div>
                 </div>
@@ -821,42 +883,50 @@
                     <div id="hbContent7" class="space-y-4 hidden">
                         <div class="flex justify-between items-start border-b border-slate-800 pb-3">
                             <div>
-                                <h3 class="text-base font-bold text-amber-400">7. Золотые правила агента USSS (Важно к запоминанию!)</h3>
-                                <p class="text-[11px] text-slate-400">Ключевые юридические директивы, защищающие агента от исков</p>
+                                <h3 class="text-base font-bold text-amber-400">7. Золотые правила процедуры (Критически важно!)</h3>
+                                <p class="text-[11px] text-slate-400">Обязательные юридические стандарты для каждого агента</p>
                             </div>
-                            <span class="bg-amber-950/50 border border-amber-900/40 text-amber-400 px-2.5 py-1 text-[10px] font-mono rounded font-bold uppercase">Памятка</span>
+                            <span class="bg-amber-950/50 border border-amber-900/40 text-amber-400 px-2.5 py-1 text-[10px] font-mono rounded font-bold uppercase">Регламент</span>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex gap-3 items-start">
-                                <i class="fa-solid fa-video text-blue-400 text-lg mt-0.5"></i>
+                                <div class="h-8 w-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-video text-blue-400 text-sm"></i>
+                                </div>
                                 <div>
-                                    <h4 class="text-xs font-bold text-slate-200 uppercase font-mono">Видеофиксация и хранение</h4>
-                                    <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">Агент обязан беспрерывно вести видеозапись всего процесса задержания и хранить её на серверах в течение 72 часов (согласно ПК) или 48 часов (согласно правилам ПГО).</p>
+                                    <h4 class="text-xs font-bold text-slate-200 uppercase font-mono">Видеофиксация</h4>
+                                    <p class="text-[11px] text-slate-400 mt-1.5 leading-relaxed">Вы обязаны вести непрерывную запись с момента пресечения нарушения и хранить её <strong>48 часов</strong> (по ПГО) или <strong>72 часа</strong> (по ПК).</p>
                                 </div>
                             </div>
 
                             <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex gap-3 items-start">
-                                <i class="fa-solid fa-mask text-amber-400 text-lg mt-0.5"></i>
+                                <div class="h-8 w-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-id-card text-amber-400 text-sm"></i>
+                                </div>
                                 <div>
-                                    <h4 class="text-xs font-bold text-slate-200 uppercase font-mono">Задержание за маски</h4>
-                                    <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">Запрещено задерживать гражданина исключительно за факт ношения маски. Сначала потребуйте снять её для установления личности. Задержание возможно только при отказе (ст. 17.6 УК).</p>
+                                    <h4 class="text-xs font-bold text-slate-200 uppercase font-mono">Идентификация</h4>
+                                    <p class="text-[11px] text-slate-400 mt-1.5 leading-relaxed">При первом обращении к гражданину вы обязаны предъявить жетон, бейдж или служебное удостоверение.</p>
                                 </div>
                             </div>
 
                             <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex gap-3 items-start">
-                                <i class="fa-solid fa-expand text-indigo-400 text-lg mt-0.5"></i>
+                                <div class="h-8 w-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-bullhorn text-indigo-400 text-sm"></i>
+                                </div>
                                 <div>
-                                    <h4 class="text-xs font-bold text-slate-200 uppercase font-mono">Безопасная Оцепочная зона</h4>
-                                    <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">Вы имеете право требовать от граждан отойти на расстояние 20 метров от охраняемого лица или места проведения спец. операции для обеспечения безопасности.</p>
+                                    <h4 class="text-xs font-bold text-slate-200 uppercase font-mono">Миранда</h4>
+                                    <p class="text-[11px] text-slate-400 mt-1.5 leading-relaxed">Правило Миранды зачитывается один раз. Если задержанный не понял — повторно. Больше двух раз зачитывать не требуется.</p>
                                 </div>
                             </div>
 
                             <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex gap-3 items-start">
-                                <i class="fa-solid fa-globe text-emerald-400 text-lg mt-0.5"></i>
+                                <div class="h-8 w-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-handcuffs text-emerald-400 text-sm"></i>
+                                </div>
                                 <div>
-                                    <h4 class="text-xs font-bold text-slate-200 uppercase font-mono">Универсальная компетенция</h4>
-                                    <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">Агенты Секретной Службы обладают исключительным правом законного доступа к компетенции любого силового или государственного ведомства на территории штата.</p>
+                                    <h4 class="text-xs font-bold text-slate-200 uppercase font-mono">Права задержанного</h4>
+                                    <p class="text-[11px] text-slate-400 mt-1.5 leading-relaxed">Каждый задержанный имеет право на один телефонный звонок (до 3 минут только адвокату) и на государственного адвоката.</p>
                                 </div>
                             </div>
                         </div>
@@ -867,7 +937,7 @@
 
             <!-- Modal Footer -->
             <div class="px-6 py-3 bg-slate-950 border-t border-slate-800 flex justify-between items-center text-xs text-slate-500 font-mono">
-                <span>GOV USSS OPERATIONAL HANDBOOK v3.0</span>
+                <span>Справочник с полезной информацией для задержаний</span>
                 <span>Используйте во время выездов</span>
             </div>
         </div>
@@ -878,14 +948,10 @@
     <footer class="bg-slate-950 border-t border-slate-900 py-3 px-6 text-center text-[10px] text-slate-500 font-mono mt-auto flex justify-between items-center">
         <span>GOV USSS</span>
         <div class="flex gap-4 opacity-70">
-            <span>Version 3.0</span>
+            <span>Version 3.2</span>
         </div>
     </footer>
 
-
-    <!-- ========================================== -->
-    <!--          СЕКЦИЯ 3: СЦЕНАРИИ (JS)           -->
-    <!-- ========================================== -->
     <script>
         // Massive, verified law database of UK, KOAP, DK, PK, EK
         const ukDataRaw = `6.1 ч.1|Легкие телесные повреждения|Умышленное нанесение побоев или легких телесных повреждений|0|3|3|
@@ -1101,7 +1167,6 @@
 1.10.1 ПГО|Неуважительное общение|Оскорбление, провокация или использование унизительных анимаций|0|0|0|0|0|OOC: Demorgan 50-100 / WARN
 1.10.2 ПГО|Поведение в ЗЗ|Модель поведения, не соответствующая гос. сотруднику в Зеленых Зонах|0|0|0|0|0|OOC: Demorgan 20-80 / WARN`;
 
-        // Data arrays
         let ukArticles = [];
         let koapArticles = [];
         let dkArticles = [];
@@ -1109,21 +1174,18 @@
         let ekArticles = [];
         let selectedArticles = [];
         let currentCodeType = "UK";
+        
+        let bolos = [];
 
         function parseAllData() {
             const parser = (line, typeLabel) => {
                 const fields = line.split("|");
-                
-                // Извлекаем спец. описание, игнорируя "0" и выбирая между 7-й и 9-й колонкой
                 let sdes = "";
                 const val6 = fields[6]?.trim();
                 const val8 = fields[8]?.trim();
                 
-                if (val6 && val6 !== "0") {
-                    sdes = val6;
-                } else if (val8 && val8 !== "0") {
-                    sdes = val8;
-                }
+                if (val6 && val6 !== "0") sdes = val6;
+                else if (val8 && val8 !== "0") sdes = val8;
 
                 return {
                     article: fields[0]?.trim() || "",
@@ -1148,15 +1210,10 @@
 
         function switchCode(codeType) {
             currentCodeType = codeType;
-            
             const tabs = ["ALL", "UK", "KOAP", "DK", "PK", "EK"];
             const titles = {
-                ALL: "Глобальный поиск по всем кодексам",
-                UK: "Уголовный Кодекс (УК)",
-                KOAP: "Кодекс об Адм. Правонарушениях",
-                DK: "Дорожный Кодекс (ДК)",
-                PK: "Процессуальный Кодекс (ПК)",
-                EK: "Этический Кодекс (ЭК)"
+                ALL: "Глобальный поиск", UK: "Уголовный Кодекс (УК)", KOAP: "Кодекс об Адм. Правонарушениях",
+                DK: "Дорожный Кодекс (ДК)", PK: "Процессуальный Кодекс (ПК)", EK: "Этический Кодекс (ЭК)"
             };
 
             document.getElementById('currentDatabaseTitle').textContent = titles[codeType];
@@ -1178,23 +1235,17 @@
         function renderQuickFilterChips() {
             const container = document.getElementById('quickFilterChips');
             container.innerHTML = "";
-            
             let prefixes = [];
-            if (currentCodeType === "UK") {
-                prefixes = ["6.", "7.", "10.", "12.", "15.", "16.", "17.", "18."];
-            } else if (currentCodeType === "KOAP") {
-                prefixes = ["1.", "2.", "3.", "5.", "6.", "8.", "9."];
-            } else if (currentCodeType === "DK") {
-                prefixes = ["1."];
-            } else if (currentCodeType === "PK" || currentCodeType === "EK") {
-                prefixes = ["Статья"];
-            }
+            
+            if (currentCodeType === "UK") prefixes = ["6.", "7.", "10.", "12.", "15.", "16.", "17.", "18."];
+            else if (currentCodeType === "KOAP") prefixes = ["1.", "2.", "3.", "5.", "6.", "8.", "9."];
+            else if (currentCodeType === "DK") prefixes = ["1."];
+            else if (currentCodeType === "PK" || currentCodeType === "EK") prefixes = ["Статья"];
 
             prefixes.forEach(prefix => {
                 const btn = document.createElement('button');
                 btn.type = "button";
                 btn.className = "bg-slate-950 hover:bg-slate-800 text-slate-400 hover:text-white px-2.5 py-1 rounded-lg transition border border-slate-850 text-[10px] font-semibold";
-                
                 btn.textContent = currentCodeType === "PK" || currentCodeType === "EK" ? "Все статьи" : `Раздел ${prefix}`;
                 btn.onclick = () => {
                     document.getElementById('searchInput').value = prefix === "Статья" ? "" : prefix;
@@ -1208,9 +1259,8 @@
             const searchInput = document.getElementById('searchInput').value.toLowerCase().trim();
             let currentSet = [];
             
-            if (currentCodeType === "ALL") {
-                currentSet = [...ukArticles, ...koapArticles, ...dkArticles, ...pkArticles, ...ekArticles];
-            } else if (currentCodeType === "UK") currentSet = ukArticles;
+            if (currentCodeType === "ALL") currentSet = [...ukArticles, ...koapArticles, ...dkArticles, ...pkArticles, ...ekArticles];
+            else if (currentCodeType === "UK") currentSet = ukArticles;
             else if (currentCodeType === "KOAP") currentSet = koapArticles;
             else if (currentCodeType === "DK") currentSet = dkArticles;
             else if (currentCodeType === "PK") currentSet = pkArticles;
@@ -1221,7 +1271,6 @@
                        item.title.toLowerCase().includes(searchInput) ||
                        item.description.toLowerCase().includes(searchInput);
             });
-
             renderArticlesList(filtered);
         }
 
@@ -1238,17 +1287,12 @@
             }
 
             articles.forEach(item => {
-                // Проверка: является ли статья наказуемой
                 const hasPunishment = item.punishment > 0 || item.jail > 0 || item.fine > 0 || item.fixfine > 0 || item.days > 0;
+                const cardBg = hasPunishment ? "bg-slate-950/70 hover:bg-slate-850" : "bg-slate-900/30 opacity-80 border-dashed";
                 
                 const card = document.createElement('div');
-                // Меняем стиль для информационных статей
-                const cardBg = hasPunishment ? "bg-slate-950/70 hover:bg-slate-850" : "bg-slate-900/30 opacity-80 border-dashed";
                 card.className = `p-3 ${cardBg} rounded-lg border border-slate-850 hover:border-slate-700 transition duration-150 cursor-pointer flex flex-col gap-1.5 select-none`;
-                
-                if (hasPunishment) {
-                    card.addEventListener('dblclick', () => addArticle(item));
-                }
+                if (hasPunishment) card.addEventListener('dblclick', () => addArticle(item));
 
                 let badgeHtml = "";
                 if (item.type === "УК" && item.punishment > 0) {
@@ -1291,7 +1335,6 @@
                         addArticle(item);
                     });
                 }
-                
                 container.appendChild(card);
             });
         }
@@ -1320,7 +1363,6 @@
             const selectedListContainer = document.getElementById('selectedChargesList');
             const calcCard = document.getElementById('calculatorCard');
             
-            // Сброс стилей на базовые
             calcCard.classList.remove('glow-red');
             calcCard.classList.add('glow-blue');
             const bailCont = document.getElementById('bailContainer');
@@ -1336,7 +1378,6 @@
                 document.getElementById('totalFineText').textContent = "$0";
                 document.getElementById('totalJailText').textContent = "0 лет";
                 document.getElementById('starsLabel').textContent = "Без КПЗ";
-                
                 document.getElementById('bailAmountText').textContent = "$0";
                 document.getElementById('bailAmountText').className = "text-base font-extrabold text-blue-400 mt-1";
                 document.getElementById('bailLabel').textContent = "Доступен выход под залог";
@@ -1350,9 +1391,7 @@
             selectedListContainer.classList.remove('hidden');
             selectedListContainer.innerHTML = "";
 
-            let totalStars = 0;
-            let totalFine = 0;
-            let totalJail = 0;
+            let totalStars = 0, totalFine = 0, totalJail = 0;
             let specDirectives = [];
             let bailPossible = true;
 
@@ -1375,13 +1414,8 @@
                     `;
 
                     if (item.superdes) {
-                        specDirectives.push({
-                            type: "УК-Директива",
-                            text: `Статья ${item.article} УК: <strong class="text-red-300 font-semibold">${item.superdes}</strong>`
-                        });
-                        if (item.superdes.toLowerCase().includes('без права на залог')) {
-                            bailPossible = false;
-                        }
+                        specDirectives.push({ text: `Статья ${item.article} УК: <strong class="text-red-300 font-semibold">${item.superdes}</strong>` });
+                        if (item.superdes.toLowerCase().includes('без права на залог')) bailPossible = false;
                     }
                 } else if (item.type === "КоАП" || item.type === "ДК" || item.type === "ЭК") {
                     totalFine += item.fixfine;
@@ -1392,13 +1426,8 @@
                         </div>
                     `;
                     if (item.superdes) {
-                        specDirectives.push({
-                            type: "Директива",
-                            text: `Статья ${item.article} ${item.type}: <strong class="text-amber-400 font-semibold">${item.superdes}</strong>`
-                        });
+                        specDirectives.push({ text: `Статья ${item.article} ${item.type}: <strong class="text-amber-400 font-semibold">${item.superdes}</strong>` });
                     }
-                } else {
-                    detailsHtml = `<div class="text-[10px] mt-1 text-blue-400 font-mono">Процессуальное руководство</div>`;
                 }
 
                 itemCard.innerHTML = `
@@ -1413,16 +1442,13 @@
                         <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
                 `;
-                
                 itemCard.querySelector('.remove-btn').addEventListener('click', () => removeArticle(item.article, item.type));
                 selectedListContainer.appendChild(itemCard);
             });
 
-            // Установка итоговых значений HUD
             document.getElementById('totalFineText').textContent = `$${totalFine.toLocaleString()}`;
             document.getElementById('totalJailText').textContent = `${totalJail} лет`;
 
-            // Логика залога и звезд розыска
             let bailAmountEl = document.getElementById('bailAmountText');
             let bailLabelEl = document.getElementById('bailLabel');
 
@@ -1432,12 +1458,9 @@
                 
                 let renderStars = Math.min(totalStars, 5);
                 let starHtml = "";
-                for (let i = 0; i < renderStars; i++) {
-                    starHtml += `<i class="fa-solid fa-star"></i>`;
-                }
+                for (let i = 0; i < renderStars; i++) starHtml += `<i class="fa-solid fa-star"></i>`;
                 document.getElementById('starsStarsContainer').innerHTML = starHtml;
 
-                // Расчет суммы залога ($10,000 за звезду)
                 if (bailPossible) {
                     bailAmountEl.textContent = `$${(totalStars * 10000).toLocaleString()}`;
                     bailAmountEl.className = "text-base font-extrabold text-blue-400 mt-1";
@@ -1447,7 +1470,6 @@
                     bailAmountEl.className = "text-base font-extrabold text-red-500 mt-1 drop-shadow-md";
                     bailLabelEl.textContent = "Тяжкое преступление. Залог запрещен.";
                     
-                    // Стиль экстренной тревоги при тяжелом преступлении
                     calcCard.classList.remove('glow-blue');
                     calcCard.classList.add('glow-red');
                     bailCont.classList.remove('border-slate-800', 'bg-slate-900/80');
@@ -1463,33 +1485,247 @@
                 bailLabelEl.textContent = "Только выплата штрафа";
             }
 
-            // Рендер дополнительных директив
             const dirBox = document.getElementById('specialDirectivesContainer');
             if (specDirectives.length > 0) {
                 dirBox.classList.remove('hidden');
                 dirBox.innerHTML = `
-                    <div class="font-bold text-red-400 mb-1 flex items-center gap-1.5">
-                        <i class="fa-solid fa-triangle-exclamation"></i> ВНИМАНИЕ! ДОПОЛНИТЕЛЬНЫЕ ДИРЕКТИВЫ:
-                    </div>
-                    <ul class="list-disc list-inside space-y-1 pl-1">
-                        ${specDirectives.map(d => `<li>${d.text}</li>`).join("")}
-                    </ul>
+                    <div class="font-bold text-red-400 mb-1 flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation"></i> ВНИМАНИЕ! ДИРЕКТИВЫ:</div>
+                    <ul class="list-disc list-inside space-y-1 pl-1">${specDirectives.map(d => `<li>${d.text}</li>`).join("")}</ul>
                 `;
             } else {
                 dirBox.classList.add('hidden');
             }
         }
 
-        // Блокнот
+        // Procedural Timers Variables
+        let mainTimerInterval = null;
+        let waitTimerInterval = null;
+        let mainTimeLeft = 3600; // 60 minutes
+        let waitTimeLeft = 0;
+        let isMainTimerRunning = false;
+
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const s = (seconds % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function toggleMainTimer() {
+            const btn = document.getElementById('btnMainTimer');
+            if (isMainTimerRunning) {
+                // Pause
+                clearInterval(mainTimerInterval);
+                isMainTimerRunning = false;
+                btn.textContent = "ПРОДОЛЖИТЬ";
+                btn.classList.replace('bg-rose-600', 'bg-blue-600');
+                btn.classList.replace('hover:bg-rose-500', 'hover:bg-blue-500');
+            } else {
+                // Start
+                if(waitTimerInterval) {
+                    clearInterval(waitTimerInterval);
+                    waitTimerInterval = null;
+                    document.getElementById('waitTimerContainer').classList.add('hidden');
+                }
+                
+                isMainTimerRunning = true;
+                btn.textContent = "ПАУЗА";
+                btn.classList.replace('bg-blue-600', 'bg-rose-600');
+                btn.classList.replace('hover:bg-blue-500', 'hover:bg-rose-500');
+                
+                mainTimerInterval = setInterval(() => {
+                    if (mainTimeLeft > 0) {
+                        mainTimeLeft--;
+                        document.getElementById('mainTimerDisplay').textContent = formatTime(mainTimeLeft);
+                    } else {
+                        clearInterval(mainTimerInterval);
+                        isMainTimerRunning = false;
+                        document.getElementById('mainTimerDisplay').textContent = "00:00";
+                    }
+                }, 1000);
+            }
+        }
+
+        function startWaitTimer(minutes, label) {
+            // Pause main if running
+            if (isMainTimerRunning) {
+                toggleMainTimer();
+            }
+            
+            // Setup wait timer
+            if (waitTimerInterval) clearInterval(waitTimerInterval);
+            
+            waitTimeLeft = minutes * 60;
+            document.getElementById('waitTimerLabel').textContent = `Ожидание: ${label}`;
+            document.getElementById('waitTimerDisplay').textContent = formatTime(waitTimeLeft);
+            document.getElementById('waitTimerDisplay').classList.remove('text-red-500');
+            document.getElementById('waitTimerDisplay').classList.add('text-amber-400', 'animate-pulse');
+            document.getElementById('waitTimerContainer').classList.remove('hidden');
+
+            waitTimerInterval = setInterval(() => {
+                if (waitTimeLeft > 0) {
+                    waitTimeLeft--;
+                    document.getElementById('waitTimerDisplay').textContent = formatTime(waitTimeLeft);
+                } else {
+                    clearInterval(waitTimerInterval);
+                    document.getElementById('waitTimerDisplay').textContent = "ВРЕМЯ ВЫШЛО";
+                    document.getElementById('waitTimerDisplay').classList.replace('text-amber-400', 'text-red-500');
+                    document.getElementById('waitTimerDisplay').classList.remove('animate-pulse');
+                }
+            }, 1000);
+        }
+
+        function resetTimers() {
+            clearInterval(mainTimerInterval);
+            clearInterval(waitTimerInterval);
+            mainTimerInterval = null;
+            waitTimerInterval = null;
+            isMainTimerRunning = false;
+            
+            mainTimeLeft = 3600;
+            document.getElementById('mainTimerDisplay').textContent = "60:00";
+            
+            const btn = document.getElementById('btnMainTimer');
+            btn.textContent = "СТАРТ";
+            btn.classList.replace('bg-rose-600', 'bg-blue-600');
+            btn.classList.replace('hover:bg-rose-500', 'hover:bg-blue-500');
+            
+            document.getElementById('waitTimerContainer').classList.add('hidden');
+        }
+
+        // Handbook Timer (15 minutes for GOV employees)
+        let hbTimerInterval = null;
+        let hbTimeLeft = 900; // 15 minutes
+        let isHbTimerRunning = false;
+
+        function toggleTacticalTimer() {
+            const btn = document.getElementById('hbTimerBtn');
+            if (isHbTimerRunning) {
+                // Pause
+                clearInterval(hbTimerInterval);
+                isHbTimerRunning = false;
+                btn.textContent = "ПРОДОЛЖИТЬ";
+                btn.classList.replace('bg-rose-600', 'bg-blue-600');
+                btn.classList.replace('hover:bg-rose-500', 'hover:bg-blue-500');
+            } else {
+                // Start
+                isHbTimerRunning = true;
+                btn.textContent = "ПАУЗА";
+                btn.classList.replace('bg-blue-600', 'bg-rose-600');
+                btn.classList.replace('hover:bg-blue-500', 'hover:bg-rose-500');
+                
+                hbTimerInterval = setInterval(() => {
+                    if (hbTimeLeft > 0) {
+                        hbTimeLeft--;
+                        document.getElementById('hbTimerDisplay').textContent = formatTime(hbTimeLeft);
+                    } else {
+                        clearInterval(hbTimerInterval);
+                        isHbTimerRunning = false;
+                        document.getElementById('hbTimerDisplay').textContent = "00:00";
+                        btn.textContent = "ВРЕМЯ";
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetTacticalTimer() {
+            clearInterval(hbTimerInterval);
+            hbTimerInterval = null;
+            isHbTimerRunning = false;
+            
+            hbTimeLeft = 900;
+            document.getElementById('hbTimerDisplay').textContent = "15:00";
+            
+            const btn = document.getElementById('hbTimerBtn');
+            btn.textContent = "СТАРТ";
+            btn.classList.replace('bg-rose-600', 'bg-blue-600');
+            btn.classList.replace('hover:bg-rose-500', 'hover:bg-blue-500');
+        }
+
+        function analyzeLegality() {
+            const checkboxes = document.querySelectorAll('.legal-check');
+            const statusBox = document.getElementById('legalityStatus');
+            let isLegal = false;
+
+            checkboxes.forEach(cb => {
+                if (cb.checked) isLegal = true;
+            });
+
+            if (isLegal) {
+                statusBox.className = "bg-emerald-950/20 text-emerald-300 border border-emerald-900/40 p-3 rounded-lg flex items-center gap-2.5 text-xs transition-colors duration-300";
+                statusBox.innerHTML = `
+                    <i class="fa-solid fa-circle-check text-emerald-500 text-sm"></i>
+                    <span>Законное основание подтверждено. Вы имеете право проводить процедуру задержания.</span>
+                `;
+            } else {
+                statusBox.className = "bg-rose-950/20 text-rose-300 border border-rose-900/40 p-3 rounded-lg flex items-center gap-2.5 text-xs transition-colors duration-300";
+                statusBox.innerHTML = `
+                    <i class="fa-solid fa-circle-xmark text-rose-500 text-sm"></i>
+                    <span>Внимание: ни одного законного основания не выбрано. Задержание без причин является нарушением процессуального законодательства.</span>
+                `;
+            }
+        }
+
+        function selectForceLevel(level) {
+            for(let i=1; i<=5; i++) {
+                const card = document.getElementById(`forceCard${i}`);
+                if (card) {
+                    card.classList.add('opacity-60', 'border-slate-800', 'bg-slate-950/60');
+                    card.classList.remove('border-amber-500/30', 'bg-slate-950');
+                }
+            }
+            
+            const selected = document.getElementById(`forceCard${level}`);
+            if (selected) {
+                selected.classList.remove('opacity-60', 'border-slate-800', 'bg-slate-950/60');
+                selected.classList.add('border-amber-500/30', 'bg-slate-950');
+            }
+
+            const details = document.getElementById('forceLevelDetails');
+            const data = {
+                1: { title: "Стадия 1 — Присутствие", text: "Нахождение в форме с опознавательными знаками. Оказывает психологическое воздействие на граждан, пресекая мелкие нарушения одним лишь фактом присутствия представителя власти на территории." },
+                2: { title: "Стадия 2 — Приказ", text: "Ясные и понятные устные требования, которые должны быть законными и исполнимыми (например, требование остановиться, отойти на 20 метров)." },
+                3: { title: "Стадия 3 — Физическая сила", text: "Применение приемов рукопашного боя, заламывание рук для удержания. Применяется, если нарушитель игнорирует приказы, но не проявляет вооруженной агрессии." },
+                4: { title: "Стадия 4 — Спецсредства", text: "Применение наручников, тайзера, дубинки или резиновых пуль. Строго запрещено использовать спецсредства в качестве «предупреждения» или для развлечения." },
+                5: { title: "Стадия 5 — Оружие на поражение", text: "Применяется исключительно при прямой угрозе жизни агента или гражданских. Агенты USSS имеют право открывать огонь на поражение без предупреждения, если возникает прямая угроза охраняемому лицу." }
+            };
+            
+            if (details && data[level]) {
+                details.innerHTML = `<h4 class="text-xs font-bold text-slate-100">${data[level].title}</h4><p class="text-xs text-slate-400 mt-1 leading-relaxed">${data[level].text}</p>`;
+            }
+        }
+
+        function toggleStepCheckbox(step) {
+            const box = document.getElementById(`stepBox${step}`);
+            const check = document.getElementById(`stepCheck${step}`);
+            
+            if (check.classList.contains('bg-emerald-500')) {
+                check.classList.remove('bg-emerald-500', 'border-emerald-400', 'text-slate-950');
+                check.classList.add('bg-slate-800', 'border-slate-700', 'text-slate-300');
+                check.innerHTML = step;
+                box.classList.remove('border-emerald-500/30', 'bg-emerald-950/10');
+                box.classList.add('border-slate-800', 'bg-slate-950');
+            } else {
+                check.classList.remove('bg-slate-800', 'border-slate-700', 'text-slate-300');
+                check.classList.add('bg-emerald-500', 'border-emerald-400', 'text-slate-950');
+                check.innerHTML = '<i class="fa-solid fa-check"></i>';
+                box.classList.remove('border-slate-800', 'bg-slate-950');
+                box.classList.add('border-emerald-500/30', 'bg-emerald-950/10');
+            }
+        }
+
         function saveNotepad() {
-            const noteText = document.getElementById('tacticalNotepad').value;
-            localStorage.setItem('usss_notepad_data', noteText);
+            localStorage.setItem('usss_notepad_data', document.getElementById('tacticalNotepad').value);
         }
 
         function loadNotepad() {
             const savedData = localStorage.getItem('usss_notepad_data');
-            if (savedData) {
-                document.getElementById('tacticalNotepad').value = savedData;
+            if (savedData) document.getElementById('tacticalNotepad').value = savedData;
+            
+            // Load BOLO
+            const savedBolo = localStorage.getItem('usss_bolo_data');
+            if (savedBolo) {
+                bolos = JSON.parse(savedBolo);
+                renderBolo();
             }
         }
 
@@ -1498,11 +1734,48 @@
             localStorage.removeItem('usss_notepad_data');
         }
 
-        // Кроссбраузерное копирование текста в буфер через фиктивный текстовый блок
+        function handleBoloKeyPress(e) {
+            if (e.key === 'Enter') addBolo();
+        }
+
+        function addBolo() {
+            const input = document.getElementById('boloInput');
+            const val = input.value.trim();
+            if (val) {
+                bolos.push(val);
+                input.value = '';
+                saveBolo();
+                renderBolo();
+            }
+        }
+
+        function removeBolo(index) {
+            bolos.splice(index, 1);
+            saveBolo();
+            renderBolo();
+        }
+
+        function saveBolo() {
+            localStorage.setItem('usss_bolo_data', JSON.stringify(bolos));
+        }
+
+        function renderBolo() {
+            const container = document.getElementById('boloList');
+            container.innerHTML = '';
+            bolos.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = "flex justify-between items-center bg-slate-950 px-2.5 py-1.5 rounded border border-slate-800 text-xs text-slate-300";
+                div.innerHTML = `
+                    <span class="truncate">${item}</span>
+                    <button onclick="removeBolo(${index})" class="text-slate-500 hover:text-rose-400 ml-2"><i class="fa-solid fa-xmark"></i></button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
         function copyRawText(textVal, buttonId) {
             const textArea = document.createElement("textarea");
             textArea.value = textVal;
-            // Убираем элемент с экрана, не нарушая скролл
             textArea.style.position = "fixed";
             textArea.style.top = "0";
             textArea.style.left = "0";
@@ -1524,11 +1797,13 @@
                     const btn = document.getElementById(buttonId);
                     const oldText = btn.innerHTML;
                     btn.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i> ТЕКСТ СКОПИРОВАН!`;
-                    btn.classList.add('bg-emerald-600');
+                    btn.classList.replace('bg-indigo-600', 'bg-emerald-600');
+                    btn.classList.remove('hover:bg-indigo-500');
                     
                     setTimeout(() => {
                         btn.innerHTML = oldText;
-                        btn.classList.remove('bg-emerald-600');
+                        btn.classList.replace('bg-emerald-600', 'bg-indigo-600');
+                        btn.classList.add('hover:bg-indigo-500');
                     }, 2000);
                 }
             } catch (err) {
@@ -1539,15 +1814,12 @@
 
         function toggleRegTab(tab) {
             const tabs = ['Rules', 'DoDont', 'Miranda', 'Secrecy'];
-            
             tabs.forEach(t => {
                 const btn = document.getElementById(`regTab${t}`);
                 const content = document.getElementById(`regContent${t}`);
-                
                 const isTarget = tab.toLowerCase().includes(t.toLowerCase()) || 
                                 (tab === 'usss-rules' && t === 'Rules') || 
                                 (tab === 'usss-do-dont' && t === 'DoDont');
-
                 if (isTarget) {
                     btn.className = "text-[11px] font-bold border-b-2 border-blue-500 pb-1.5 text-blue-400 uppercase tracking-wider transition";
                     content.classList.remove('hidden');
@@ -1558,18 +1830,6 @@
             });
         }
 
-        function startTacticalClock() {
-            setInterval(() => {
-                const now = new Date();
-                const timeStr = now.toTimeString().split(' ')[0];
-                document.getElementById('tacticalClock').textContent = timeStr;
-            }, 1000);
-        }
-
-        // =========================================================
-        //     СЕКЦИЯ 3.5: СЦЕНАРИИ ТАКТИЧЕСКОГО СПРАВОЧНИКА (JS)   
-        // =========================================================
-        
         function openHandbook() {
             const modal = document.getElementById('handbookModal');
             modal.classList.remove('pointer-events-none', 'opacity-0');
@@ -1587,160 +1847,24 @@
         }
 
         function switchHandbookTab(tabNumber) {
-            // Переключаем стили кнопок навигации
             for (let i = 1; i <= 7; i++) {
                 const tabBtn = document.getElementById(`hbTab${i}`);
                 const contentBlock = document.getElementById(`hbContent${i}`);
-                
                 if (i === tabNumber) {
-                    tabBtn.className = "text-left py-2.5 px-3 rounded-lg text-xs font-semibold text-amber-400 bg-amber-500/10 border-l-2 border-amber-500 flex items-center gap-2.5 transition relative";
+                    tabBtn.className = "text-left py-2.5 px-3 rounded-lg text-xs font-semibold text-amber-400 bg-amber-500/10 border-l-2 border-amber-500 flex items-center gap-2.5 transition";
                     contentBlock.classList.remove('hidden');
                 } else {
-                    tabBtn.className = "text-left py-2.5 px-3 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-900 flex items-center gap-2.5 transition relative";
+                    tabBtn.className = "text-left py-2.5 px-3 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-900 flex items-center gap-2.5 transition";
                     contentBlock.classList.add('hidden');
                 }
             }
         }
 
-        function selectForceLevel(level) {
-            const details = {
-                1: {
-                    title: "Стадия 1 — Присутствие",
-                    desc: "Нахождение в форме с опознавательными знаками. Оказывает психологическое воздействие на граждан, пресекая мелкие нарушения одним лишь фактом присутствия представителя власти на территории."
-                },
-                2: {
-                    title: "Стадия 2 — Приказ",
-                    desc: "Устное требование, которое должно быть абсолютно законным и исполнимым. Агент дает четкие, громкие команды, не допуская двусмысленности в трактовке."
-                },
-                3: {
-                    title: "Стадия 3 — Физическая сила",
-                    desc: "Заламывание рук, применение приемов рукопашного боя, выкручивание суставов. Применяется, если подозреваемый игнорирует устные приказы или оказывает пассивное сопротивление."
-                },
-                4: {
-                    title: "Стадия 4 — Спецсредства",
-                    desc: "Применение наручников, тайзера (электрошокера), резиновых пуль. Запрещено использовать спецсредства в качестве 'предупредительного' выстрела или средства пыток."
-                },
-                5: {
-                    title: "Стадия 5 — Огнестрельное оружие",
-                    desc: "Применяется исключительно при возникновении прямой угрозы жизни агента или других граждан. Исключение для USSS: вы имеете право открыть огонь на поражение без предупреждения по любому лицу (включая госслужащих), если оно создает прямую угрозу охраняемому лицу."
-                }
-            };
+        setInterval(() => {
+            document.getElementById('realClock').textContent = new Date().toTimeString().split(' ')[0];
+        }, 1000);
 
-            // Обновляем визуальный вид карточек стадий
-            for (let i = 1; i <= 5; i++) {
-                const card = document.getElementById(`forceCard${i}`);
-                if (i === level) {
-                    card.className = "border border-amber-500/30 bg-slate-950 p-3 rounded-xl cursor-pointer hover:border-amber-400 transition-all flex flex-col justify-between h-36 scale-102 shadow-lg";
-                    card.classList.remove('opacity-60');
-                } else {
-                    card.className = "border border-slate-800 bg-slate-950/60 p-3 rounded-xl cursor-pointer hover:border-slate-700 transition-all flex flex-col justify-between h-36 opacity-60";
-                }
-            }
-
-            // Обновляем описание
-            document.getElementById('forceLevelDetails').innerHTML = `
-                <h4 class="text-xs font-bold text-slate-100">${details[level].title}</h4>
-                <p class="text-xs text-slate-400 mt-1 leading-relaxed">${details[level].desc}</p>
-            `;
-        }
-
-        function analyzeLegality() {
-            const checkboxes = document.querySelectorAll('.legal-check');
-            let checkedCount = 0;
-            checkboxes.forEach(cb => {
-                if (cb.checked) checkedCount++;
-            });
-
-            const statusBox = document.getElementById('legalityStatus');
-            if (checkedCount > 0) {
-                statusBox.className = "bg-emerald-950/20 text-emerald-300 border border-emerald-900/40 p-3 rounded-lg flex items-center gap-2.5 text-xs";
-                statusBox.innerHTML = `
-                    <i class="fa-solid fa-circle-check text-emerald-500 text-sm"></i>
-                    <span>Основание верифицировано. Задержание юридически обосновано (${checkedCount} подтвержденных признаков).</span>
-                `;
-            } else {
-                statusBox.className = "bg-rose-950/20 text-rose-300 border border-rose-900/40 p-3 rounded-lg flex items-center gap-2.5 text-xs";
-                statusBox.innerHTML = `
-                    <i class="fa-solid fa-circle-xmark text-rose-500 text-sm"></i>
-                    <span>Внимание: ни одного законного основания не выбрано. Задержание без причин является нарушением процессуального законодательства.</span>
-                `;
-            }
-        }
-
-        function toggleStepCheckbox(stepNum) {
-            const stepBox = document.getElementById(`stepBox${stepNum}`);
-            const checkIcon = document.getElementById(`stepCheck${stepNum}`);
-            
-            const isCompleted = stepBox.classList.contains('border-emerald-500/30');
-            
-            if (!isCompleted) {
-                stepBox.className = "bg-emerald-950/10 hover:bg-emerald-950/20 p-3.5 rounded-xl border border-emerald-500/30 flex items-start gap-4 cursor-pointer transition";
-                checkIcon.className = "h-6 w-6 rounded-full bg-emerald-500 border border-emerald-400 flex items-center justify-center font-bold text-xs shrink-0 text-slate-950";
-                checkIcon.innerHTML = `<i class="fa-solid fa-check"></i>`;
-            } else {
-                stepBox.className = "bg-slate-950 hover:bg-slate-900 p-3.5 rounded-xl border border-slate-800 flex items-start gap-4 cursor-pointer transition";
-                checkIcon.className = "h-6 w-6 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-xs shrink-0 text-slate-300";
-                checkIcon.innerHTML = stepNum;
-            }
-        }
-
-        // Интерактивный таймер ожидания вызова гос. лиц
-        let timerInstance = null;
-        let timerSeconds = 15 * 60; // 15 минут
-
-        function toggleTacticalTimer() {
-            const btn = document.getElementById('hbTimerBtn');
-            const display = document.getElementById('hbTimerDisplay');
-
-            if (timerInstance) {
-                // Ставим на паузу
-                clearInterval(timerInstance);
-                timerInstance = null;
-                btn.textContent = "СТАРТ";
-                btn.className = "bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 py-1 text-[10px] rounded transition";
-            } else {
-                // Запускаем таймер
-                btn.textContent = "ПАУЗА";
-                btn.className = "bg-amber-600 hover:bg-amber-500 text-white font-bold px-3 py-1 text-[10px] rounded transition";
-                
-                timerInstance = setInterval(() => {
-                    if (timerSeconds > 0) {
-                        timerSeconds--;
-                        
-                        const mins = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
-                        const secs = (timerSeconds % 60).toString().padStart(2, '0');
-                        
-                        display.textContent = `${mins}:${secs}`;
-                    } else {
-                        // Время вышло
-                        clearInterval(timerInstance);
-                        timerInstance = null;
-                        display.textContent = "ВРЕМЯ ВЫШЛО";
-                        display.classList.add('animate-pulse');
-                        btn.textContent = "ОЖИДАНИЕ";
-                        btn.className = "bg-red-600 text-white font-bold px-3 py-1 text-[10px] rounded cursor-not-allowed";
-                    }
-                }, 1000);
-            }
-        }
-
-        function resetTacticalTimer() {
-            if (timerInstance) {
-                clearInterval(timerInstance);
-                timerInstance = null;
-            }
-            timerSeconds = 15 * 60;
-            const display = document.getElementById('hbTimerDisplay');
-            display.textContent = "15:00";
-            display.classList.remove('animate-pulse');
-            
-            const btn = document.getElementById('hbTimerBtn');
-            btn.textContent = "СТАРТ";
-            btn.className = "bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 py-1 text-[10px] rounded transition";
-        }
-
-
-        // Global scope assignments for HTML onclick handlers
+        // Global scope assignments
         window.switchCode = switchCode;
         window.filterArticles = filterArticles;
         window.clearAllSelected = clearAllSelected;
@@ -1750,23 +1874,26 @@
         window.copyRawText = copyRawText;
         window.removeArticle = removeArticle;
         window.addArticle = addArticle;
-        
-        // Modal Handlers
         window.openHandbook = openHandbook;
         window.closeHandbook = closeHandbook;
         window.switchHandbookTab = switchHandbookTab;
-        window.selectForceLevel = selectForceLevel;
-        window.analyzeLegality = analyzeLegality;
-        window.toggleStepCheckbox = toggleStepCheckbox;
+        window.toggleMainTimer = toggleMainTimer;
+        window.startWaitTimer = startWaitTimer;
+        window.resetTimers = resetTimers;
+        window.addBolo = addBolo;
+        window.removeBolo = removeBolo;
+        window.handleBoloKeyPress = handleBoloKeyPress;
         window.toggleTacticalTimer = toggleTacticalTimer;
         window.resetTacticalTimer = resetTacticalTimer;
+        window.analyzeLegality = analyzeLegality;
+        window.selectForceLevel = selectForceLevel;
+        window.toggleStepCheckbox = toggleStepCheckbox;
 
         // Init
         window.addEventListener('DOMContentLoaded', () => {
             parseAllData();
             renderQuickFilterChips();
             filterArticles();
-            startTacticalClock();
             loadNotepad();
         });
     </script>

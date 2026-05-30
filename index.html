@@ -326,6 +326,7 @@
                             <i class="fa-solid fa-hourglass-half text-rose-500 text-xs"></i>
                             <span id="totalJailText" class="text-base font-extrabold text-rose-400">0 лет</span>
                         </div>
+                        <span id="totalJailMinutesText" class="text-[10px] text-rose-500 font-bold font-mono mt-0.5">0 мин. в КПЗ</span>
                         <span class="text-[9px] text-slate-400 mt-1 truncate">Самостоятельный арест (FIB)</span>
                     </div>
 
@@ -341,7 +342,7 @@
             </div>
 
             <!-- BOLO and Notepad Row -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- BOLO Tracker -->
                 <div class="bg-slate-950 rounded-xl border border-slate-850 p-3 flex flex-col gap-2">
                     <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-mono flex items-center gap-2">
@@ -369,6 +370,31 @@
                         </button>
                     </div>
                     <textarea id="tacticalNotepad" class="w-full h-full min-h-[4rem] bg-slate-900 text-slate-300 text-xs p-2.5 border border-slate-800 rounded-lg focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 outline-none resize-none font-mono" placeholder="Имена, статики, номера улик..." oninput="saveNotepad()"></textarea>
+                </div>
+
+                <!-- Time Converter -->
+                <div class="bg-slate-950 rounded-xl border border-slate-850 p-3 flex flex-col gap-2">
+                    <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-mono flex items-center gap-2">
+                        <i class="fa-solid fa-calculator text-emerald-400"></i> Конвертер Срока
+                    </h3>
+                    <div class="flex flex-col gap-2 flex-grow justify-center">
+                        <div class="flex items-center gap-2">
+                            <div class="w-1/2">
+                                <label class="text-[9px] text-slate-500 font-mono block mb-1 uppercase">Звезды / Года</label>
+                                <input type="number" id="convStarsInput" min="0" max="100" value="1" oninput="convertTime('stars')" class="w-full bg-slate-900 text-slate-300 text-xs p-2 border border-slate-800 rounded focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 outline-none font-mono">
+                            </div>
+                            <div class="text-slate-500 font-mono text-xs pt-4 text-center">
+                                <i class="fa-solid fa-arrows-left-right"></i>
+                            </div>
+                            <div class="w-1/2">
+                                <label class="text-[9px] text-slate-500 font-mono block mb-1 uppercase">Минуты КПЗ</label>
+                                <input type="number" id="convMinInput" min="0" value="10" oninput="convertTime('min')" class="w-full bg-slate-900 text-slate-300 text-xs p-2 border border-slate-800 rounded focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 outline-none font-mono">
+                            </div>
+                        </div>
+                        <div class="text-[9px] text-slate-400 font-mono bg-slate-900/40 p-1.5 rounded border border-slate-800/50 leading-tight text-center">
+                            <span class="text-cyan-400 font-semibold">Формула:</span> 1 звезда = 1 год = 10 мин КПЗ.
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -961,7 +987,7 @@
                     <i class="fa-solid fa-bullhorn text-cyan-400"></i>
                 </div>
                 <div>
-                    <h3 class="font-extrabold text-sm text-slate-100 tracking-wider uppercase font-mono">Список изменений: Версия <span id="changelogVersionText">4.1.1</span></h3>
+                    <h3 class="font-extrabold text-sm text-slate-100 tracking-wider uppercase font-mono">Список изменений: Версия <span id="changelogVersionText">4.3.0</span></h3>
                     <p class="text-[10px] text-slate-400 font-mono">История обновлений и исправлений</p>
                 </div>
             </div>
@@ -973,6 +999,22 @@
                         <i class="fa-solid fa-square-poll-horizontal text-[10px]"></i> ЧТО СДЕЛАНО В ЭТОМ ПАТЧЕ:
                     </h4>
                     <ul class="text-xs text-slate-300 space-y-2 pl-4 list-disc leading-relaxed">
+                        <li>
+                            <strong class="text-slate-100">Добавлен интерактивный Конвертер Срока.</strong>
+                            <p class="text-slate-400 text-[10px] mt-0.5">Встроенный калькулятор в нижней части экрана автоматически пересчитывает «Звезды/Года» в реальное время заключения («Минуты КПЗ») по официальному тарифу: 1 звезда = 1 год = 10 минут.</p>
+                        </li>
+                        <li>
+                            <strong class="text-slate-100">Авторасчет времени КПЗ в досье.</strong>
+                            <p class="text-slate-400 text-[10px] mt-0.5">При выборе любой уголовной статьи калькулятор досье теперь самостоятельно рассчитывает и выводит общее экранное время ареста в минутах.</p>
+                        </li>
+                        <li>
+                            <strong class="text-slate-100">Оптимизация интерфейса.</strong>
+                            <p class="text-slate-400 text-[10px] mt-0.5">Сетка нижнего блока перестроена на 3 колонки (BOLO, Блокнот и Конвертер) для удобной работы на любых типах устройств.</p>
+                        </li>
+                        <li>
+                            <strong class="text-slate-100">Исправлен подсчёт залога.</strong>
+                            <p class="text-slate-400 text-[10px] mt-0.5">Добавлен лимит на максимальный залог в сумме 125 тысяч а также запрет на выход под залог при 4 и более звёздах.</p>
+                        </li>
                         <li>
                             <strong class="text-slate-100">Добавлены анимации при открытии/закрытии модального окна и при переключении вкладок.</strong>
                             <p class="text-slate-400 text-[10px] mt-0.5">Плавные эффекты увеличения и затухания для более приятного пользовательского опыта.</p>
@@ -992,22 +1034,6 @@
                         <li>
                             <strong class="text-slate-100">Убран туториал.</strong>
                             <p class="text-slate-400 text-[10px] mt-0.5">Туториал был удален для упрощения интерфейса и улучшения пользовательского опыта.</p>
-                        </li>
-                        <li>
-                            <strong class="text-slate-100">Добавлен интерактивный Конвертер Срока.</strong>
-                            <p class="text-slate-400 text-[10px] mt-0.5">Встроенный калькулятор в нижней части экрана автоматически пересчитывает «Звезды/Года» в реальное время заключения («Минуты КПЗ») по официальному тарифу: 1 звезда = 1 год = 10 минут.</p>
-                        </li>
-                        <li>
-                            <strong class="text-slate-100">Авторасчет времени КПЗ в досье.</strong>
-                            <p class="text-slate-400 text-[10px] mt-0.5">При выборе любой уголовной статьи калькулятор досье теперь самостоятельно рассчитывает и выводит общее экранное время ареста в минутах.</p>
-                        </li>
-                        <li>
-                            <strong class="text-slate-100">Оптимизация интерфейса.</strong>
-                            <p class="text-slate-400 text-[10px] mt-0.5">Сетка нижнего блока перестроена на 3 колонки (BOLO, Блокнот и Конвертер) для удобной работы на любых типах устройств.</p>
-                        </li>
-                        <li>
-                            <strong class="text-slate-100">Исправлен подсчёт залога.</strong>
-                            <p class="text-slate-400 text-[10px] mt-0.5">Добавлен лимит на максимальный залог в сумме 125 тысяч а также запрет на выход под залог при 4 и более звёздах.</p>
                         </li>
                     </ul>
                 </div>
@@ -1273,7 +1299,7 @@
         let currentCodeType = "UK";
         let bolos = [];
 
-        const APP_VERSION = "4.2.0";
+        const APP_VERSION = "4.3.0";
 
         // Parsing raw text into structures
         function parseAllData() {
@@ -1480,6 +1506,7 @@
                 document.getElementById('starsStarsContainer').innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500"></i>`;
                 document.getElementById('totalFineText').textContent = "$0";
                 document.getElementById('totalJailText').textContent = "0 лет";
+                document.getElementById('totalJailMinutesText').textContent = "0 мин. в КПЗ";
                 document.getElementById('starsLabel').textContent = "Без КПЗ";
                 document.getElementById('bailAmountText').textContent = "$0";
                 document.getElementById('bailAmountText').className = "text-base font-extrabold text-blue-400 mt-1";
@@ -1555,6 +1582,7 @@
 
             document.getElementById('totalFineText').textContent = `$${totalFine.toLocaleString()}`;
             document.getElementById('totalJailText').textContent = `${totalJail} лет`;
+            document.getElementById('totalJailMinutesText').textContent = `${totalJail * 10} мин. в КПЗ`;
 
             let bailAmountEl = document.getElementById('bailAmountText');
             let bailLabelEl = document.getElementById('bailLabel');
@@ -1795,6 +1823,18 @@
             
             if (details && data[level]) {
                 details.innerHTML = `<h4 class="text-xs font-bold text-slate-100 animate-swoosh-in">${data[level].title}</h4><p class="text-xs text-slate-400 mt-1 leading-relaxed animate-swoosh-in">${data[level].text}</p>`;
+            }
+        }
+
+        function convertTime(source) {
+            const starsInput = document.getElementById('convStarsInput');
+            const minInput = document.getElementById('convMinInput');
+            if (source === 'stars') {
+                const stars = parseFloat(starsInput.value) || 0;
+                minInput.value = Math.round(stars * 10);
+            } else {
+                const mins = parseFloat(minInput.value) || 0;
+                starsInput.value = (mins / 10).toFixed(1).replace('.0', '');
             }
         }
 
@@ -2075,6 +2115,7 @@
         window.resetTacticalTimer = resetTacticalTimer;
         window.analyzeLegality = analyzeLegality;
         window.selectForceLevel = selectForceLevel;
+        window.convertTime = convertTime;
         window.openChangelog = openChangelog;
         window.closeChangelog = closeChangelog;
 
